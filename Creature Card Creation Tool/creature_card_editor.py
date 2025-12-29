@@ -356,11 +356,15 @@ class CreatureCardEditor(tk.Tk):
             
             # Create the folder
             os.makedirs(folder_path)
-            
-            # Save JSON file
+            # Save JSON file (write a JSON copy, replacing image path with its basename)
             json_path = os.path.join(folder_path, "creature.json")
+            # Use a dictionary copy so we don't mutate the in-memory CreatureCard
+            data = creature.to_dict()
+            orig_image = data.get('image_path', '') or ''
+            # Replace image_path with just the filename (basename) if present
+            data['image_path'] = Path(orig_image).name if orig_image else ''
             with open(json_path, 'w') as f:
-                f.write(creature.to_json())
+                json.dump(data, f, indent=2)
             
             # Copy image if provided
             if creature.image_path and os.path.exists(creature.image_path):
