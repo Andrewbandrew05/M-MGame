@@ -17,7 +17,11 @@ class AttackFrame(ttk.LabelFrame):
     def __init__(self, parent, attack=None, on_remove=None):
         super().__init__(parent, text="Attack", padding=10)
         self.on_remove = on_remove
-        self.attack = attack or Attack("", 0, "")
+        # Initialize attack with proper energy_costs
+        if attack is None:
+            self.attack = Attack("", 0, "", {energy_type: 0 for energy_type in ENERGY_TYPES})
+        else:
+            self.attack = attack
         
         # Attack name
         ttk.Label(self, text="Name:").grid(row=0, column=0, sticky="w", padx=5, pady=5)
